@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Metadata(BaseModel):
@@ -36,3 +36,14 @@ class Query(BaseModel):
 
 class CustomddbQuery(BaseModel):
     query: str
+
+class MilvusdbQuery(BaseModel):
+    collection_name: str = Field(examples=["leetcode"])
+    filename: str
+    query: str
+    top_k: int
+
+class Solution(BaseModel):
+    id: str | None = None
+    collection: str
+    problem_id: str

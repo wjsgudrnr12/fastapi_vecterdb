@@ -2,12 +2,14 @@ import os
 from PyPDF2 import PdfReader
 from fastapi import FastAPI
 from datastore import Datastore
-from models import Query, File, ChromdbQuery, CustomddbQuery
+from models import *
 from chromadbinterface import ChromadbInterface
 from customdbinterface import CustomdbInterface
+from milvusdbinterface import MilvusdbInterface
 
 cdb_interface = ChromadbInterface()
 cudb_interface = CustomdbInterface()
+mdb_interface = MilvusdbInterface()
 
 
 app = FastAPI()
@@ -30,4 +32,20 @@ async def query(query: ChromdbQuery):
 @app.post("/customdb/query")
 async def query(query: CustomddbQuery):
     return cudb_interface.custom_query(query) 
+
+@app.post("/milvusdb/load")
+async def load(file: File):
+    return mdb_interface.milvusdb_load(file)
+
+@app.get("/milvusdb/query")
+async def query(query: MilvusdbQuery):
+    return mdb_interface.milvusdb_query(query) 
+
+@app.get("/milvusdb/problem/{id}")
+async def query(problem_id: str):
+    return 
+
+@app.get("/milvusdb/solution/{id}")
+async def query(solution: Solution):
+    return 
 
