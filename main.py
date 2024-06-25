@@ -16,22 +16,23 @@ app = FastAPI()
 
 @app.post("/chromadb/load")
 async def load(file: File):
+    print("/chromadb/load")
+    print(file.path)
     return cdb_interface.chromadb_load(file)
-
 
 @app.post("/customdb/load")
 async def load(file: File):
+    print("/customdb/load")
+    print(file.path)
     return cudb_interface.custom_load(file)
-
 
 @app.post("/chromadb/query")
 async def query(query: ChromdbQuery):
     return cdb_interface.chromadb_query(query)
 
-
 @app.post("/customdb/query")
 async def query(query: CustomddbQuery):
-    return cudb_interface.custom_query(query) 
+    return cudb_interface.custom_query(query)
 
 @app.post("/milvusdb/load")
 async def load(file: File):
@@ -49,3 +50,6 @@ async def query(problem_id: str):
 async def query(solution: Solution):
     return 
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)

@@ -5,7 +5,7 @@ from openai import OpenAI
 import numpy as np
 from pprint import pprint
 
-from models import ReuestFile
+from models import File, CustomddbQuery
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,8 +29,7 @@ class CustomdbInterface:
                 doc = {'id': row[0], 'vector': vector,
                     'question': row[1], 'answer': row[2]}
                 faq_db.append(doc)
-
-        return faq_db
+        return "customdb load ok"
 
 
     def get_embedding(self, content, model='text-embedding-ada-002'):
@@ -59,21 +58,22 @@ class CustomdbInterface:
         results = sorted(results, key=lambda e: e['score'], reverse=True)
         # print("data\n\n")
         # print(results)
-
-        return results
+        print(results[:query.top_k])
+        return results[:query.top_k]
 
 
 if __name__ == '__main__':
     db = CustomdbInterface()
-    file = ReuestFile(db_type='customdb', path='prompt-faq.csv')
+    file = File(path='prompt-faq.csv')
 
     faq_db = db.custom_load(file)
     # print(faq_db)
     # print(faq_db)
 
-    question = "ReAct가 뭔가요?"
-    vector = db.get_embedding(question)
+    query = CustomddbQuery(query="ReAct가 뭔가요?", top_k = 2)
+    print(query.query)
+    #vector = db.get_embedding(query)
     # print(question, vector)
 
-    result = db.custom_query(vector, faq_db)
+    result = db.custom_query(query)
     pprint(result)

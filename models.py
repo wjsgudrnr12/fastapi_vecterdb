@@ -36,6 +36,7 @@ class Query(BaseModel):
 
 class CustomddbQuery(BaseModel):
     query: str
+    top_k: int
 
 class MilvusdbQuery(BaseModel):
     collection_name: str = Field(examples=["leetcode"])

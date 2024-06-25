@@ -1,8 +1,7 @@
 import os
 from PyPDF2 import PdfReader
-from fastapi import FastAPI
 from datastore import Datastore
-from models import Document, Query, File
+from models import Document, ChromdbQuery, File
 
 db = Datastore("chromadb")
 
@@ -40,12 +39,33 @@ class ChromadbInterface:
         return {
             "filename": filename,
             "total_pages": len(pdf.pages),
-            "text": fulltext
+            "data": "chromadb load ok"
         }
     
-    def chromadb_query(self, query: Query) -> list[Document]:
+    def chromadb_query(self, query: ChromdbQuery) -> list[Document]:
         result = db.query(query.filename, query.query, query.top_k)
 
-        print(query.filename, query.query)
+        print(result)
         return result
+    
+
+if __name__ == '__main__':
+
+    chromadb = ChromadbInterface()
+    file = File(path="sample.pdf")
+    file.path = "sample.pdf"
+    chromadb.chromadb_load(file)
+
+    query = ChromdbQuery(filename="sample.pdf", query="이 논문의 내용은 어떤 내용이에요?", top_k=1)
+    query.query ="이 논문의 내용은 어떤 내용이에요?"
+    print(chromadb.chromadb_query(query))
+
+    print(query)
+
+
+
+
+
+
+
     
